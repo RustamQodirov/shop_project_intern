@@ -1,0 +1,40 @@
+name: shop
+description: "A new Flutter project."
+publish_to: 'none'  # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.3 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Cupertino Icons for iOS style icons
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.16
+  yandex_mapkit: ^3.2.0
+  geolocator: ^9.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true  # This ensures the Material Icons font is included
+
+  assets:
+    - assets/icons/  # Ensure you have your SVG or image assets in this folder
+    - assets/images/  # Ensure you have your SVG or image assets in this folder
+   # Ensure you have your SVG or image assets in this folder
+
+  # Optional: Add custom fonts if required
+  fonts:
+    - family: Gilroy
+      fonts:
+        - asset: assets/fonts/Gilroy-Regular.ttf
+
+  #       - asset: fonts/CustomFont-Bold.ttf
+  #         weight: 700
