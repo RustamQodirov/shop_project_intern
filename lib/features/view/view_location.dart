@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shop/features/data/models/app_lat_long.dart';
-import 'package:shop/features/view/map_page.dart';
 import 'package:shop/features/view/samll_container.dart';
 
 class ViewLocation extends StatelessWidget {

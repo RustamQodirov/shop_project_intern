@@ -20,6 +20,7 @@ class _MapScreenState extends State<MapScreen> {
   final List<PlacemarkMapObject> placemarks = [];
   final Map<String, bool> placemarkToggles = {};
   bool isOverlayVisible = false;
+  ViewLocation? selectedMarket;
 
   @override
   void initState() {
@@ -99,7 +100,7 @@ class _MapScreenState extends State<MapScreen> {
         point: const Point(latitude: 39.762602, longitude: 67.278833),
         icon: PlacemarkIcon.single(PlacemarkIconStyle(
           zIndex: 1,
-          image: BitmapDescriptor.fromAssetImage('assets/images/unm.png'),
+          image: BitmapDescriptor.fromAssetImage('assets/images/off.png'),
           scale: 0.7,
         )),
       ),
@@ -108,7 +109,7 @@ class _MapScreenState extends State<MapScreen> {
         mapId: const MapObjectId('texnomart'),
         point: const Point(latitude: 39.7629453, longitude: 67.2694326),
         icon: PlacemarkIcon.single(PlacemarkIconStyle(
-          image: BitmapDescriptor.fromAssetImage('assets/images/untexno.png'),
+          image: BitmapDescriptor.fromAssetImage('assets/images/off.png'),
           scale: 0.7,
         )),
       ),
@@ -123,11 +124,28 @@ class _MapScreenState extends State<MapScreen> {
       onTap: (PlacemarkMapObject self, Point point) {
         final isSelected = placemarkToggles[self.mapId.value] ?? false;
         final newIconPath =
-            isSelected ? 'assets/images/unm.png' : 'assets/images/snm.png';
+            isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
         updatePlacemarkIcon(self.mapId.value, newIconPath);
         placemarkToggles[self.mapId.value] = !isSelected;
         setState(() {
-          isOverlayVisible = !isOverlayVisible;
+          if (placemarkToggles['idea'] == false &&
+              placemarkToggles['texnomart'] == false) {
+            isOverlayVisible = false;
+            selectedMarket = null;
+          } else {
+            isOverlayVisible = !isSelected;
+            selectedMarket = isSelected
+                ? null
+                : const ViewLocation(
+                    imgUrl: "assets/images/idea.png",
+                    title: "Idea",
+                    address: "Ташкент, Юнусабадский р-н, ул А. Темура, 43/2",
+                    appLatLong: AppLatLong(
+                        lat: 41.318118727817414, long: 69.29323833747138),
+                    distance: "1.5 km",
+                    timeToArrive: "10 min",
+                  );
+          }
         });
       },
     );
@@ -136,11 +154,28 @@ class _MapScreenState extends State<MapScreen> {
       onTap: (PlacemarkMapObject self, Point point) {
         final isSelected = placemarkToggles[self.mapId.value] ?? false;
         final newIconPath =
-            isSelected ? 'assets/images/notexno.png' : 'assets/images/snm.png';
+            isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
         updatePlacemarkIcon(self.mapId.value, newIconPath);
         placemarkToggles[self.mapId.value] = !isSelected;
         setState(() {
-          isOverlayVisible = !isOverlayVisible;
+          if (placemarkToggles['idea'] == false &&
+              placemarkToggles['texnomart'] == false) {
+            isOverlayVisible = false;
+            selectedMarket = null;
+          } else {
+            isOverlayVisible = !isSelected;
+            selectedMarket = isSelected
+                ? null
+                : const ViewLocation(
+                    imgUrl: "assets/images/tex.png",
+                    title: "Texnomart",
+                    address: "Ташкент, Юнусабад 11",
+                    appLatLong: AppLatLong(
+                        lat: 41.318118727817414, long: 69.29323833747138),
+                    distance: "2.3 km",
+                    timeToArrive: "28 min",
+                  );
+          }
         });
       },
     );
@@ -263,17 +298,19 @@ class _MapScreenState extends State<MapScreen> {
               left: 0,
               curve: Curves.easeInToLinear,
               right: 0,
-              child: const BottomDetailsOverlay(
-                viewLocation: ViewLocation(
-                  imgUrl: "assets/images/idea.png",
-                  title: "Idea",
-                  address: "Ташкент, Юнусабадский р-н, ул А. Темура, 43/2",
-                  appLatLong: AppLatLong(
-                      lat: 41.318118727817414, long: 69.29323833747138),
-                  distance: "1.5 km",
-                  timeToArrive: "10 min",
-                ),
-              ),
+              child: isOverlayVisible
+                  ? BottomDetailsOverlay(
+                      viewLocation: selectedMarket ??
+                          const ViewLocation(
+                            imgUrl: "",
+                            title: "No Market Selected",
+                            address: "Unknown",
+                            appLatLong: AppLatLong(lat: 0.0, long: 0.0),
+                            distance: "N/A",
+                            timeToArrive: "N/A",
+                          ),
+                    )
+                  : SizedBox.shrink(),
             ),
           ],
         ),

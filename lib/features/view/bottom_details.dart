@@ -29,7 +29,6 @@ class BottomDetailsOverlay extends StatelessWidget {
       child: Column(
         children: [
           Row(
-
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -48,13 +47,12 @@ class BottomDetailsOverlay extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-
                       child: Text(
                         viewLocation.title,
                         style: const TextStyle(
@@ -64,8 +62,7 @@ class BottomDetailsOverlay extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const  SizedBox(
-
+                    const SizedBox(
                       height: 20,
                       child: const Text(
                         "Магазин электроники\n",
@@ -76,26 +73,26 @@ class BottomDetailsOverlay extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const  Text("Другие филиалы",
+                    const Text("Другие филиалы",
                         style: TextStyle(
                           fontSize: 13,
-                          color:  Color(0xff4059E6),
+                          color: Color(0xff4059E6),
                         )),
                   ],
                 ),
               ),
               const Spacer(),
               Container(
-                margin: const EdgeInsets.only(top: 10,right: 5),
+                margin: const EdgeInsets.only(top: 10, right: 5),
                 height: 50,
                 width: 50,
                 decoration: const BoxDecoration(
-                  color:  Color(0xfff4f4f5),
+                  color: Color(0xfff4f4f5),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.location_on_outlined,
-                  color:  Color(0xff4059E6),
+                  color: Color(0xff4059E6),
                 ),
               ),
             ],
@@ -113,10 +110,10 @@ class BottomDetailsOverlay extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(right: 10),
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color:  Color(0xffF4F4F5),
+                    color: Color(0xffF4F4F5),
                   ),
                   child: const Icon(
                     Icons.location_on,
@@ -143,10 +140,10 @@ class BottomDetailsOverlay extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(right: 10),
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: const  BoxDecoration(
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color:  Color(0xffF4F4F5),
+                    color: Color(0xffF4F4F5),
                   ),
                   child: const Icon(
                     Icons.phone,
@@ -173,10 +170,10 @@ class BottomDetailsOverlay extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(right: 10),
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xffF4F4F5),
+                    color: Color(0xffF4F4F5),
                   ),
                   child: const Icon(
                     Icons.access_time_filled_rounded,
@@ -185,9 +182,9 @@ class BottomDetailsOverlay extends StatelessWidget {
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 120,
-                  child: Text(
+                  child: const Text(
                     "пн-пт 10:00-21:00, сб-вс 10:00-20:00",
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       color: Color(0xff040405),
                     ),

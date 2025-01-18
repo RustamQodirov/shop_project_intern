@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/features/view/map_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shop/features/view/screens/search_page.dart';
 import 'package:shop/near_store_items.dart';
 import 'package:shop/reco_stores.dart';
-import 'package:shop/search_page.dart';
+
+import '../data/model/home_page_data.dart';
+import '../../logic/category_cubit.dart';
+import '../../view/screens/map_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -120,7 +125,8 @@ class MainContent extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SearchPage(category: '')),
+          MaterialPageRoute(
+              builder: (context) => const SearchPage(category: '')),
         );
       },
       readOnly: true,
@@ -148,7 +154,8 @@ class MainContent extends StatelessWidget {
         ),
         fillColor: const Color(0xFFF4F4F5),
         filled: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       style: const TextStyle(color: Colors.black, fontSize: 16),
     );
@@ -171,28 +178,21 @@ class MainContent extends StatelessWidget {
   }
 
   Widget _buildCategoryList(BuildContext context) {
-    final categories = [
-      {'icon': 'assets/images/laptop.png', 'label': 'Электроника'},
-      {'icon': 'assets/images/phone.png', 'label': 'Смартфоны'},
-      {'icon': 'assets/images/machine.png', 'label': 'Бытовая техника'},
-      {'icon': 'assets/images/sofa.png', 'label': 'Мебель'},
-      {'icon': 'assets/images/car1.png', 'label': 'Авто товары'},
-      {'icon': 'assets/images/bear.png', 'label': 'Игрушки'},
-    ];
-
     return SizedBox(
       height: 104,
       child: ListView.builder(
-        itemCount: categories.length,
+        itemCount: HomePageData.categories.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          final category = HomePageData.categories[index];
           return GestureDetector(
             onTap: () {
+              context.read<CategoryCubit>().selectCategory(category['label']!);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchPage(category: category['label']!),
+                  builder: (context) =>
+                      SearchPage(category: category['label']!),
                 ),
               );
             },
@@ -254,7 +254,7 @@ class MainContent extends StatelessWidget {
         SizedBox(
           height: 260,
           child: ListView.builder(
-            itemCount: 3,
+            itemCount: HomePageData.nearbyStores.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return NearbyStoreItem();
@@ -266,24 +266,6 @@ class MainContent extends StatelessWidget {
   }
 
   Widget _buildRecommendedStoresSection() {
-    final stores = [
-      {
-        'name': 'Elmakon',
-        'image': 'assets/images/player.png',
-        'logo': 'assets/images/el.png',
-      },
-      {
-        'name': 'Texnomart',
-        'image': 'assets/images/earphone.png',
-        'logo': 'assets/images/tex.png',
-      },
-      {
-        'name': 'idea',
-        'image': 'assets/images/earphone.png',
-        'logo': 'assets/images/idea.png',
-      },
-    ];
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -300,10 +282,10 @@ class MainContent extends StatelessWidget {
         SizedBox(
           height: 280,
           child: ListView.builder(
-            itemCount: stores.length,
+            itemCount: HomePageData.recommendedStores.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              final store = stores[index];
+              final store = HomePageData.recommendedStores[index];
               return RecommendedStoreItem(
                 name: store['name']!,
                 image: store['image']!,
@@ -316,4 +298,3 @@ class MainContent extends StatelessWidget {
     );
   }
 }
-
