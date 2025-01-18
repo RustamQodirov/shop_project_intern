@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../logic/category_cubit.dart';
+import 'package:shop/features/home/presentation/widgets/caruosel_manager.dart';
+import '../domain/cubit/category_cubit.dart';
 import 'widgets/category_list_home.dart';
 import 'widgets/home_carousel.dart';
 import 'widgets/home_header.dart';
@@ -8,42 +9,8 @@ import 'widgets/nearby_section.dart';
 import 'widgets/recommended_store_section.dart';
 import 'widgets/search_field.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late final PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(viewportFraction: 1.0);
-    _startInfiniteScroll();
-  }
-
-  void _startInfiniteScroll() {
-    Future.delayed(const Duration(seconds: 3), () {
-      if (_pageController.hasClients) {
-        final nextPage = (_pageController.page! + 1).toInt();
-        _pageController.animateToPage(
-          nextPage,
-          duration: const Duration(seconds: 1),
-          curve: Curves.easeInOut,
-        );
-        _startInfiniteScroll();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +19,34 @@ class _HomePageState extends State<HomePage> {
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'Gilroy'),
         debugShowCheckedModeBanner: false,
-        home: MainContent(pageController: _pageController),
+        home: MainContent(),
       ),
     );
   }
 }
 
-class MainContent extends StatelessWidget {
-  final PageController pageController;
+class MainContent extends StatefulWidget {
+  const MainContent({super.key});
 
-  const MainContent({super.key, required this.pageController});
+  @override
+  State<MainContent> createState() => _MainContentState();
+}
+
+class _MainContentState extends State<MainContent> {
+  late final CarouselManager _carouselManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _carouselManager = CarouselManager();
+    _carouselManager.startCarousel();
+  }
+
+  @override
+  void dispose() {
+    _carouselManager.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +62,7 @@ class MainContent extends StatelessWidget {
               const SizedBox(height: 15),
               SearchField(),
               const SizedBox(height: 15),
-              ImageCarousel(pageController: pageController),
+              ImageCarousel(pageController: _carouselManager.pageController),
               const SizedBox(height: 15),
               CategoryList(),
               const SizedBox(height: 15),

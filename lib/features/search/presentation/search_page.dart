@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../data/models/stored_data.dart';
-import '../../logic/category_cubit.dart';
+import '../data/stored_data.dart';
+import '../../home/domain/cubit/category_cubit.dart';
 
 class SearchPage extends StatefulWidget {
   final String category;

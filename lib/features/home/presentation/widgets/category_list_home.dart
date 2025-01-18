@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../logic/category_cubit.dart';
+import '../../domain/cubit/category_cubit.dart';
 import '../../../search/presentation/search_page.dart';
 import '../../data/model/home_page_data.dart';
 
