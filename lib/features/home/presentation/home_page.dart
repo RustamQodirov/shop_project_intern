@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:shop/features/view/screens/search_page.dart';
-import 'package:shop/near_store_items.dart';
-import 'package:shop/reco_stores.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop/features/search/presentation/search_page.dart';
+import 'package:shop/features/home/presentation/widgets/near_store_items.dart';
+import 'package:shop/features/home/presentation/widgets/reco_stores.dart';
 
 import '../data/model/home_page_data.dart';
 import '../../logic/category_cubit.dart';
-import '../../view/screens/map_page.dart';
-
+import '../../map/presentation/map_page.dart';
+import 'widgets/recommended_store_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (contex) => CategoryCubit(),
+      create: (context) => CategoryCubit(),
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'Gilroy'),
         debugShowCheckedModeBanner: false,
@@ -75,25 +75,28 @@ class MainContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(context),
+              Header(),
               const SizedBox(height: 15),
-              _buildSearchField(context),
+              SearchField(),
               const SizedBox(height: 15),
-              _buildImageCarousel(),
+              ImageCarousel(pageController: pageController),
               const SizedBox(height: 15),
-              _buildCategoryList(context),
+              CategoryList(),
               const SizedBox(height: 15),
-              _buildNearbySection(),
+              NearbySection(),
               const SizedBox(height: 15),
-              _buildRecommendedStoresSection(),
+              RecommendedStoresSection(),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildHeader(BuildContext context) {
+class Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         const Text(
@@ -122,8 +125,11 @@ class MainContent extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildSearchField(BuildContext context) {
+class SearchField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return TextField(
       onTap: () {
         Navigator.push(
@@ -163,8 +169,15 @@ class MainContent extends StatelessWidget {
       style: const TextStyle(color: Colors.black, fontSize: 16),
     );
   }
+}
 
-  Widget _buildImageCarousel() {
+class ImageCarousel extends StatelessWidget {
+  final PageController pageController;
+
+  const ImageCarousel({super.key, required this.pageController});
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       height: 145,
       child: PageView.builder(
@@ -179,8 +192,11 @@ class MainContent extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildCategoryList(BuildContext context) {
+class CategoryList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       height: 104,
       child: ListView.builder(
@@ -239,8 +255,11 @@ class MainContent extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildNearbySection() {
+class NearbySection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,39 +280,6 @@ class MainContent extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return NearbyStoreItem();
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecommendedStoresSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Вам может понравится',
-          style: TextStyle(
-            fontFamily: 'Gilroy',
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF040415),
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 280,
-          child: ListView.builder(
-            itemCount: HomePageData.recommendedStores.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final store = HomePageData.recommendedStores[index];
-              return RecommendedStoreItem(
-                name: store['name']!,
-                image: store['image']!,
-                logo: store['logo']!,
-              );
             },
           ),
         ),

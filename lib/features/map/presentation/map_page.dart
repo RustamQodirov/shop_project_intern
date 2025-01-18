@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shop/features/data/models/app_lat_long.dart';
 import 'package:shop/features/data/service/app_location_service.dart';
-import 'package:shop/features/view/bottom_details.dart';
-import 'package:shop/features/view/view_location.dart';
+import 'package:shop/features/map/presentation/widgets/bottom_details.dart';
+import 'package:shop/features/map/presentation/widgets/view_location.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class MapScreen extends StatefulWidget {

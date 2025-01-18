@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop/features/view/view_location.dart';
+import 'package:shop/features/map/presentation/widgets/view_location.dart';
 
 class BottomDetailsOverlay extends StatelessWidget {
   final ViewLocation viewLocation;
