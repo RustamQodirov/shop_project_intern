@@ -49,10 +49,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Gilroy'),
-      debugShowCheckedModeBanner: false,
-      home: MainContent(pageController: _pageController),
+    return BlocProvider(
+      create: (contex) => CategoryCubit(),
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: 'Gilroy'),
+        debugShowCheckedModeBanner: false,
+        home: MainContent(pageController: _pageController),
+      ),
     );
   }
 }
