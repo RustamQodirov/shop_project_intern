@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/cubit/category_cubit.dart';
-import '../../../search/presentation/search_page.dart';
+import '../../../search/presentation/widgets/screens/search_page.dart';
 import '../../data/model/home_page_data.dart';
 
 class CategoryList extends StatelessWidget {
@@ -16,12 +14,12 @@ class CategoryList extends StatelessWidget {
           final category = HomePageData.categories[index];
           return GestureDetector(
             onTap: () {
-              context.read<CategoryCubit>().selectCategory(category['label']!);
+              // context.read<CategoryCubit>().selectCategory(category['label']!);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      SearchPage(category: category['label']!),
+                  builder: (context) => SearchPage(
+                      category: category['label']!, hideCategories: true),
                 ),
               );
             },
