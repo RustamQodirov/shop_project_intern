@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop/features/home/presentation/widgets/caruosel_manager.dart';
-import '../domain/cubit/category_cubit.dart';
-import 'widgets/category_list_home.dart';
-import 'widgets/home_carousel.dart';
-import 'widgets/home_header.dart';
-import 'widgets/nearby_section.dart';
-import 'widgets/recommended_store_section.dart';
-import 'widgets/search_field.dart';
+import '../../domain/cubit/category_cubit.dart';
+import '../widgets/category_list_home.dart';
+import '../widgets/home_carousel.dart';
+import '../widgets/home_header.dart';
+import '../widgets/nearby_section.dart';
+import '../widgets/recommended_store_section.dart';
+import '../widgets/search_field.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

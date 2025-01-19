@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../map/presentation/map_page.dart';
+import '../../../map/presentation/screens/map_page.dart';
 
 class Header extends StatelessWidget {
   @override
