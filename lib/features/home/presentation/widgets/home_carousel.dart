@@ -14,7 +14,7 @@ class ImageCarousel extends StatelessWidget {
         itemCount: 1000,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.all(5),
             child: Image.asset('assets/images/ads.png', fit: BoxFit.cover),
           );
         },
