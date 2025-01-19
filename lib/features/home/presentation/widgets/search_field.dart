@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../search/presentation/search_page.dart';
+import '../../../search/presentation/widgets/screens/search_page.dart';
 
 class SearchField extends StatelessWidget {
   @override
