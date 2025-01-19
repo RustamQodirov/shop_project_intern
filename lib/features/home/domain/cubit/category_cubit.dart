@@ -11,7 +11,4 @@ class CategoryCubit extends Cubit<CategoryState> {
     emit(CategorySelected(category));
   }
 
-  void deselectCategory() {
-    emit(CategoryDeselected());
-  }
 }
