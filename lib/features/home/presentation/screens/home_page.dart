@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop/features/home/presentation/widgets/caruosel_manager.dart';
-import '../../domain/cubit/category_cubit.dart';
+import '../cubit/category_cubit.dart';
 import '../widgets/category_list_home.dart';
 import '../widgets/home_carousel.dart';
 import '../widgets/home_header.dart';
