@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../search/presentation/widgets/screens/search_page.dart';
+import '../../../search/presentation/screens/search_page.dart';
 
 class SearchField extends StatelessWidget {
   @override
@@ -40,7 +40,7 @@ class SearchField extends StatelessWidget {
         fillColor: const Color(0xFFF4F4F5),
         filled: true,
         contentPadding:
-        const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       ),
       style: const TextStyle(color: Colors.black, fontSize: 16),
     );

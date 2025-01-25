@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shop/features/home/data/model/category_model.dart';
 
-import '../../data/stored_data.dart';
+import '../../data/model/stored_data.dart';
 
 class StoreList extends StatelessWidget {
   const StoreList({Key? key}) : super(key: key);

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop/features/search/domain/cubit/category_search_cubit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shop/features/search/presentation/widgets/store_list.dart';
-import '../quick_search.dart';
+import '../../../home/data/datasources/category_datasource.dart';
+import '../../../home/data/model/category_model.dart';
+import '../cubit/category_search_cubit.dart';
+import '../widgets/quick_search.dart';
+import 'package:dio/dio.dart';
 
 class SearchPage extends StatefulWidget {
   final String category;
@@ -23,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   final _focusNode = FocusNode();
   late final TextEditingController _searchController;
   late bool _hideCategories;
+  late List<Category> categories = [];
 
   @override
   void initState() {
@@ -34,6 +38,7 @@ class _SearchPageState extends State<SearchPage> {
             .read<CategorySearchCubit>()
             .updateSearchQuery(_searchController.text);
       });
+    _fetchCategories();
     Future.microtask(() => FocusScope.of(context).requestFocus(_focusNode));
   }
 
@@ -42,6 +47,20 @@ class _SearchPageState extends State<SearchPage> {
     _focusNode.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchCategories() async {
+    try {
+      final dio = Dio();
+      final categoryDataSource = CategoryDataSource(dio: dio);
+      final fetchedCategories = await categoryDataSource.fetchCategories(
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4OTc0Njg4ODgsImlkIjoiYmFjYWZlZTUtYWI4MC00NjBmLWIwODgtNjFhNDJmZmZjMGFlIiwidXNlcl9pZCI6IjU5NzA1ODdkLTEzNDMtNDM4ZC04NjI4LTZlZWViYjAzYmU2OSJ9.Mjc1j9lu12lc2eNddzeKi7z8GB1zu95uXi5gSOC0mKs');
+      setState(() {
+        categories = fetchedCategories;
+      });
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
   }
 
   @override
@@ -117,8 +136,7 @@ class _SearchPageState extends State<SearchPage> {
                         onChanged: (value) {
                           if (value.isNotEmpty && !_hideCategories) {
                             setState(() {
-                              _hideCategories =
-                                  true; // Hide categories when typing
+                              _hideCategories = true;
                             });
                           }
                         },
@@ -128,7 +146,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 const SizedBox(height: 16),
                 if (!_hideCategories) ...[
-                  QuickSearch(),
+                  QuickSearch(categories: categories),
                   const SizedBox(height: 16),
                 ],
                 Expanded(child: StoreList()),

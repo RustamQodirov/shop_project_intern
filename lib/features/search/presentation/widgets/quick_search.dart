@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../data/stored_data.dart';
-import '../../domain/cubit/category_search_cubit.dart';
+import '../../../home/data/model/category_model.dart';
+import '../cubit/category_search_cubit.dart';
 
 class QuickSearch extends StatelessWidget {
-  const QuickSearch({Key? key}) : super(key: key);
+  final List<Category> categories;
+
+  const QuickSearch({Key? key, required this.categories}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,21 +14,23 @@ class QuickSearch extends StatelessWidget {
       height: 104,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: StoreData.quickSearch.map((data) {
-          final index = StoreData.quickSearch.indexOf(data);
+        children: categories.map((data) {
+          final index = categories.indexOf(data);
 
           return BlocBuilder<CategorySearchCubit, CategorySearchState>(
             builder: (context, state) {
               final isSelected =
-                  state is CategorySelected && state.category == data['label'];
+                  state is CategorySelected && state.category == data.title;
 
               return GestureDetector(
                 onTap: () {
                   if (isSelected) {
+                    // Do nothing if the category is already selected
                   } else {
+                    // Select the category
                     context
                         .read<CategorySearchCubit>()
-                        .selectCategory(data['label']!);
+                        .selectCategory(data.title);
                   }
                 },
                 child: Column(
@@ -49,15 +52,36 @@ class QuickSearch extends StatelessWidget {
                         ),
                       ),
                       child: Center(
-                        child:
-                        Image.asset(data['icon']!, width: 50, height: 50),
+                        child: data.banner != null
+                            ? Image.network(
+                                data.banner!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.category, // Placeholder icon
+                                    size: 40,
+                                    color: isSelected
+                                        ? const Color(0xFF4059E6)
+                                        : Colors.grey,
+                                  );
+                                },
+                              )
+                            : Icon(
+                                Icons.category,
+                                size: 40,
+                                color: isSelected
+                                    ? const Color(0xFF4059E6)
+                                    : Colors.grey,
+                              ),
                       ),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
                       width: 79,
                       child: Text(
-                        data['label']!,
+                        data.title,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Gilroy',
