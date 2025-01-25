@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../data/model/banner_model.dart';
 
 class ImageCarousel extends StatelessWidget {
   final PageController pageController;
+  final List<BannerModel> banners;
 
-  const ImageCarousel({super.key, required this.pageController});
+  const ImageCarousel(
+      {super.key, required this.pageController, required this.banners});
 
   @override
   Widget build(BuildContext context) {
@@ -11,11 +14,18 @@ class ImageCarousel extends StatelessWidget {
       height: 145,
       child: PageView.builder(
         controller: pageController,
-        itemCount: 1000,
+        itemCount: banners.length,
         itemBuilder: (context, index) {
+          final banner = banners[index];
           return Padding(
             padding: const EdgeInsets.all(5),
-            child: Image.asset('assets/images/ads.png', fit: BoxFit.cover),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                banner.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
           );
         },
       ),
