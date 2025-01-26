@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/repositories/nearby_repository.dart';
+import '../../../data/repository/nearby_repository.dart';
 import 'nearby_state.dart';
 
 class NearbyCubit extends Cubit<NearbyState> {

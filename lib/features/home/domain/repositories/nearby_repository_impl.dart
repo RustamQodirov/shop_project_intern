@@ -1,6 +1,6 @@
 import '../../data/datasources/nearby_datasource.dart';
 import '../../data/model/nearby_model.dart';
-import 'nearby_repository.dart';
+import '../../data/repository/nearby_repository.dart';
 
 
 class NearbyRepositoryImpl implements NearbyRepository {

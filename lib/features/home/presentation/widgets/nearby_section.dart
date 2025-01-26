@@ -111,7 +111,7 @@ class NearbyStoreItem extends StatelessWidget {
             child: (nearbyStore.logo.isNotEmpty)
                 ? Image.network(
               nearbyStore.logo,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain, // Changed to BoxFit.contain
               width: double.infinity,
               height: 190,
             )
