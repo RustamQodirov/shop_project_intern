@@ -15,4 +15,6 @@ class CategorySearchCubit extends Cubit<CategorySearchState> {
   void selectCategory(String category) {
     emit(CategorySelected(category));
   }
+
+  void searchShops(String title, double d, double e) {}
 }

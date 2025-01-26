@@ -53,27 +53,27 @@ class QuickSearch extends StatelessWidget {
                       child: Center(
                         child: data.banner != null
                             ? Image.network(
-                                data.banner!,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.category, // Placeholder icon
-                                    size: 40,
-                                    color: isSelected
-                                        ? const Color(0xFF4059E6)
-                                        : Colors.grey,
-                                  );
-                                },
-                              )
+                          data.banner!,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.category, // Placeholder icon
+                              size: 40,
+                              color: isSelected
+                                  ? const Color(0xFF4059E6)
+                                  : Colors.grey,
+                            );
+                          },
+                        )
                             : Icon(
-                                Icons.category,
-                                size: 40,
-                                color: isSelected
-                                    ? const Color(0xFF4059E6)
-                                    : Colors.grey,
-                              ),
+                          Icons.category,
+                          size: 40,
+                          color: isSelected
+                              ? const Color(0xFF4059E6)
+                              : Colors.grey,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),

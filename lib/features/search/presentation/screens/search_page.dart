@@ -106,19 +106,19 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           suffixIcon: _searchController.text.isNotEmpty
                               ? IconButton(
-                                  icon: SvgPicture.asset(
-                                    'assets/icons/minus.svg',
-                                    width: 16,
-                                    height: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    setState(() {
-                                      _hideCategories = false;
-                                    });
-                                  },
-                                )
+                            icon: SvgPicture.asset(
+                              'assets/icons/minus.svg',
+                              width: 16,
+                              height: 16,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {
+                                _hideCategories = false;
+                              });
+                            },
+                          )
                               : null,
                           fillColor: const Color(0xFFF4F4F5),
                           filled: true,

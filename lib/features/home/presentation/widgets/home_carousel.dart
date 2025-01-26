@@ -11,7 +11,7 @@ class ImageCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 145,
+      height: 169,
       child: PageView.builder(
         controller: pageController,
         itemCount: banners.length,
