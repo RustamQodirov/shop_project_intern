@@ -25,7 +25,6 @@ class QuickSearch extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   if (isSelected) {
-                    // Do nothing if the category is already selected
                   } else {
                     // Select the category
                     context
