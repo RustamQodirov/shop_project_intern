@@ -3,18 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../data/datasources/banner_datasource.dart';
 import '../../data/datasources/category_datasource.dart';
+import '../../data/datasources/nearby_datasource.dart'; // Add this
 import '../../domain/repositories/banner_repo_imp.dart';
 import '../../domain/repositories/category_repo_imp.dart';
-
+import '../../domain/repositories/nearby_repository_impl.dart';
 import '../bloc/banner_cubit/banner_cubit.dart';
 import '../bloc/category_cubit/category_cubit.dart';
-
+import '../bloc/nearby_cubit/nearby_cubit.dart'; // Add this
+import '../bloc/nearby_cubit/nearby_state.dart';
 import '../widgets/caruosel_manager.dart';
-
 import '../widgets/category_list_home.dart';
 import '../widgets/home_carousel.dart';
 import '../widgets/home_header.dart';
-import '../widgets/nearby_section.dart';
+import '../widgets/nearby_section.dart'; // Modify this
 import '../widgets/recommended_store_section.dart';
 import '../widgets/search_field.dart';
 
@@ -36,6 +37,13 @@ class HomePage extends StatelessWidget {
           create: (_) => CategoryCubit(
             categoryRepository: CategoryRepositoryImpl(
               dataSource: CategoryDataSource(dio: Dio()),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (_) => NearbyCubit(
+            nearbyRepository: NearbyRepositoryImpl(
+              nearbyDataSource: NearbyDataSource(dio: Dio()),
             ),
           ),
         ),
@@ -69,6 +77,7 @@ class _MainContentState extends State<MainContent> {
 
     context.read<BannerCubit>().fetchBanners(token);
     context.read<CategoryCubit>().fetchCategories(token);
+    context.read<NearbyCubit>().fetchNearbyStores(token); // Add this
   }
 
   @override
@@ -109,7 +118,18 @@ class _MainContentState extends State<MainContent> {
               const SizedBox(height: 15),
               CategoryList(token: token),
               const SizedBox(height: 15),
-              NearbySection(),
+              BlocBuilder<NearbyCubit, NearbyState>(
+                builder: (context, state) {
+                  if (state is NearbyLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is NearbyLoaded) {
+                    return NearbySection(nearbyStores: state.nearbyStores); // Modify this
+                  } else if (state is NearbyError) {
+                    return Text('Error: ${state.message}');
+                  }
+                  return Container();
+                },
+              ),
               const SizedBox(height: 15),
               RecommendedStoresSection(),
             ],

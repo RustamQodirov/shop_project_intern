@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/features/home/presentation/screens/home_page.dart';
 
 class PositionedBackButton extends StatelessWidget {
   @override
@@ -8,7 +9,7 @@ class PositionedBackButton extends StatelessWidget {
       left: 20,
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
         },
         child: Container(
           width: 50,

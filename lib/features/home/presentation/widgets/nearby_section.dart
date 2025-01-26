@@ -1,8 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import '../../data/model/home_page_data.dart';
+import 'package:shop/features/home/data/model/nearby_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 
 class NearbySection extends StatelessWidget {
+  final List<NearbyStore> nearbyStores;
+
+  const NearbySection({super.key, required this.nearbyStores});
+
+  // Function to get the distance between the user's current location and the store
+  Future<double> _getDistance(double storeLatitude, double storeLongitude) async {
+    try {
+      // Check if location permissions are granted
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return 0.0; // Return 0 if location services are not enabled
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+          return 0.0; // Return 0 if permission is denied
+        }
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Calculate distance in meters
+      double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude,
+        position.longitude,
+        storeLatitude,
+        storeLongitude,
+      );
+
+      // Convert to kilometers
+      return distanceInMeters / 1000;
+    } catch (e) {
+      print("Error calculating distance: $e");
+      return 0.0; // Return 0 if there's an error in distance calculation
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,10 +64,10 @@ class NearbySection extends StatelessWidget {
         SizedBox(
           height: 260,
           child: ListView.builder(
-            itemCount: HomePageData.nearbyStores.length,
+            itemCount: nearbyStores.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              return NearbyStoreItem();
+              return NearbyStoreItem(nearbyStore: nearbyStores[index], getDistance: _getDistance);
             },
           ),
         ),
@@ -32,61 +75,128 @@ class NearbySection extends StatelessWidget {
     );
   }
 }
+
 class NearbyStoreItem extends StatelessWidget {
-  const NearbyStoreItem({super.key});
+  final NearbyStore nearbyStore;
+  final Future<double> Function(double latitude, double longitude) getDistance;
+
+  const NearbyStoreItem({
+    super.key,
+    required this.nearbyStore,
+    required this.getDistance,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 300,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'assets/images/med.png',
-                  fit: BoxFit.cover,
-                  width: 300,
-                  height: 200,
-                ),
+          // Image container with proper scaling
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: (nearbyStore.logo.isNotEmpty)
+                ? Image.network(
+              nearbyStore.logo,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 190,
+            )
+                : Container(
+              color: Colors.grey[300],
+              width: double.infinity,
+              height: 190,
+              child: const Center(
+                child: Icon(Icons.image, color: Colors.grey),
               ),
-              const Positioned(
-                left: 10,
-                top: 10,
-                child: CircleAvatar(
-                  radius: 23,
-                  backgroundImage: AssetImage('assets/images/logo.png'),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Mediapark',
-            style: TextStyle(
-              fontFamily: 'Gilroy',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
             ),
           ),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/blueloc.svg'),
-              const SizedBox(width: 8),
-              const Text(
-                '1,2 км',
-                style: TextStyle(
-                  fontFamily: 'Gilroy',
-                  fontSize: 15,
-                  color: Colors.grey,
-                ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              nearbyStore.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis, // Prevent overflow of long names
+              style: const TextStyle(
+                fontFamily: 'Gilroy',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF040415),
               ),
-            ],
+            ),
           ),
+          const SizedBox(height: 6),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/icons/blueloc.svg', width: 14, height: 14),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: FutureBuilder<double>(
+                    future: getDistance(
+                      nearbyStore.address.latitude,
+                      nearbyStore.address.longitude,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text(
+                          'Calculating...',
+                          style: TextStyle(
+                            fontFamily: 'Gilroy',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text(
+                          'Error',
+                          style: TextStyle(
+                            fontFamily: 'Gilroy',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        );
+                      } else if (snapshot.hasData) {
+                        return Text(
+                          '${snapshot.data?.toStringAsFixed(2)} км', // Showing the distance
+                          style: const TextStyle(
+                            fontFamily: 'Gilroy',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        );
+                      } else {
+                        return const Text(
+                          'No Data',
+                          style: TextStyle(
+                            fontFamily: 'Gilroy',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );
