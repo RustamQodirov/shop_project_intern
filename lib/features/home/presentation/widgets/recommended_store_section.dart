@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../data/model/home_page_data.dart';
+import '../../data/model/recommended_store_model.dart';
 
 class RecommendedStoresSection extends StatelessWidget {
+  final List<RecommendedStore> recommendedStores;
+
+  const RecommendedStoresSection({
+    super.key,
+    required this.recommendedStores,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Вам может понравится',
+          'Вам может понравиться',
           style: TextStyle(
             fontFamily: 'Gilroy',
             fontSize: 22,
@@ -16,18 +23,17 @@ class RecommendedStoresSection extends StatelessWidget {
             color: Color(0xFF040415),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 16),
         SizedBox(
           height: 280,
           child: ListView.builder(
-            itemCount: HomePageData.recommendedStores.length,
+            itemCount: recommendedStores.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              final store = HomePageData.recommendedStores[index];
+              final store = recommendedStores[index];
               return RecommendedStoreItem(
-                name: store['name']!,
-                image: store['image']!,
-                logo: store['logo']!,
+                name: store.name,
+                imageUrl: store.logo,
               );
             },
           ),
@@ -36,28 +42,27 @@ class RecommendedStoresSection extends StatelessWidget {
     );
   }
 }
+
 class RecommendedStoreItem extends StatelessWidget {
   final String name;
-  final String image;
-  final String logo;
+  final String imageUrl;
 
   const RecommendedStoreItem({
     super.key,
     required this.name,
-    required this.image,
-    required this.logo,
+    required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
+      width: 210,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildImageWithLogo(),
-          const SizedBox(height: 8),
+          _buildImage(),
+          const SizedBox(height: 10),
           _buildNameText(),
           _buildCategoryText(),
         ],
@@ -65,50 +70,62 @@ class RecommendedStoreItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImageWithLogo() {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: Image.asset(
-            image,
-            fit: BoxFit.cover,
-            width: 209,
-            height: 209,
-          ),
+  Widget _buildImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
-        Positioned(
-          left: 10,
-          top: 10,
-          child: CircleAvatar(
-            radius: 23,
-            backgroundImage: AssetImage(logo),
-            onBackgroundImageError: (_, __) {},
-          ),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain, // Changed from BoxFit.cover to BoxFit.contain
+          width: 200,
+          height: 200,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: 200,
+              height: 200,
+              color: Colors.grey[200],
+              child: const Icon(Icons.image, color: Colors.grey),
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildNameText() {
-    return Text(
-      name,
-      style: const TextStyle(
-        fontFamily: 'Gilroy',
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF040415),
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Text(
+        name,
+        style: const TextStyle(
+          fontFamily: 'Gilroy',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF040415),
+        ),
       ),
     );
   }
 
   Widget _buildCategoryText() {
-    return const Text(
-      'Магазин электроники',
-      style: TextStyle(
-        fontFamily: 'Gilroy',
-        fontSize: 18,
-        color: Colors.grey,
+    return const Padding(
+      padding: EdgeInsets.only(left: 4),
+      child: Text(
+        'Магазин электроники',
+        style: TextStyle(
+          fontFamily: 'Gilroy',
+          fontSize: 14,
+          color: Colors.grey,
+        ),
       ),
     );
   }
