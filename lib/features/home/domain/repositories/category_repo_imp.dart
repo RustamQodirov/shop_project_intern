@@ -1,6 +1,6 @@
 import '../../data/datasources/category_datasource.dart';
 import '../../data/model/category_model.dart';
-import 'category_repository.dart';
+import '../../data/repository/category_repository.dart';
 
 class CategoryRepositoryImpl implements CategoryRepository {
   final CategoryDataSource dataSource;
