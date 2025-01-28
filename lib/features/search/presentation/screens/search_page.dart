@@ -14,9 +14,11 @@ class SearchPage extends StatefulWidget {
   final String category;
   final bool hideCategories;
 
-  const SearchPage(
-      {Key? key, required this.category, this.hideCategories = false})
-      : super(key: key);
+  const SearchPage({
+    Key? key,
+    required this.category,
+    this.hideCategories = false,
+  }) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -28,16 +30,15 @@ class _SearchPageState extends State<SearchPage> {
   late bool _hideCategories;
   late List<Category> categories = [];
   late List<Store> stores = [];
+  late List<Store> filteredStores = [];
   final String _token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4OTc0Njg4ODgsImlkIjoiYmFjYWZlZTUtYWI4MC00NjBmLWIwODgtNjFhNDJmZmZjMGFlIiwidXNlcl9pZCI6IjU5NzA1ODdkLTEzNDMtNDM4ZC04NjI4LTZlZWViYjAzYmU2OSJ9.Mjc1j9lu12lc2eNddzeKi7z8GB1zu95uXi5gSOC0mKs'; // Token as a single variable
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4OTc0Njg4ODgsImlkIjoiYmFjYWZlZTUtYWI4MC00NjBmLWIwODgtNjFhNDJmZmZjMGFlIiwidXNlcl9pZCI6IjU5NzA1ODdkLTEzNDMtNDM4ZC04NjI4LTZlZWViYjAzYmU2OSJ9.Mjc1j9lu12lc2eNddzeKi7z8GB1zu95uXi5gSOC0mKs';
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController(text: widget.category)
-      ..addListener(() => context
-          .read<CategorySearchCubit>()
-          .updateSearchQuery(_searchController.text));
+      ..addListener(() => _filterStores());
     _hideCategories = widget.hideCategories;
     _fetchCategories();
     _fetchStores();
@@ -55,8 +56,7 @@ class _SearchPageState extends State<SearchPage> {
     try {
       final dio = Dio();
       final categoryDataSource = CategoryDataSource(dio: dio);
-      categories = await categoryDataSource
-          .fetchCategories(_token); // Use the token here
+      categories = await categoryDataSource.fetchCategories(_token);
       setState(() {});
     } catch (e) {
       print("Error fetching categories: $e");
@@ -67,11 +67,29 @@ class _SearchPageState extends State<SearchPage> {
     try {
       final dio = Dio();
       final storeDataSource = StoreDataSource(dio: dio);
-      stores = await storeDataSource.fetchStores(_token); // Use the token here
+      stores = await storeDataSource.fetchStores(_token);
+      filteredStores = List.from(stores);
       setState(() {});
     } catch (e) {
       print("Error fetching stores: $e");
     }
+  }
+
+  void _filterStores() {
+    final query = _searchController.text.trim().toLowerCase();
+    setState(() {
+      if (query.isNotEmpty) {
+        // Filter stores dynamically based on name or address
+        filteredStores = stores.where((store) {
+          final name = store.name?.toLowerCase() ?? '';
+          final address = store.address?.toLowerCase() ?? '';
+          return name.contains(query) || address.contains(query);
+        }).toList();
+      } else {
+        // Reset to show all stores when the search field is empty
+        filteredStores = List.from(stores);
+      }
+    });
   }
 
   @override
@@ -107,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
     return BlocBuilder<CategorySearchCubit, CategorySearchState>(
       builder: (context, state) {
         final categoryTitle =
-            state is CategorySelected ? state.category : widget.category;
+        state is CategorySelected ? state.category : widget.category;
         return Text(
           categoryTitle.isEmpty ? 'Часто ищут' : categoryTitle,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -117,10 +135,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildStoreList() {
-    if (stores.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+    if (filteredStores.isEmpty) {
+      return const Center(
+        child: Text(
+          "No stores found matching your search. Try again!",
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+      );
     }
-    return StoreList(stores: stores);
+    return StoreList(stores: filteredStores);
   }
 
   Widget _buildSearchBar() {
@@ -158,18 +181,19 @@ class _SearchPageState extends State<SearchPage> {
         ),
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
-                icon: SvgPicture.asset('assets/icons/minus.svg',
-                    width: 16, height: 16, color: Colors.grey),
-                onPressed: () {
-                  _searchController.clear();
-                  setState(() => _hideCategories = false);
-                },
-              )
+          icon: SvgPicture.asset('assets/icons/minus.svg',
+              width: 16, height: 16, color: Colors.grey),
+          onPressed: () {
+            _searchController.clear();
+            _filterStores(); // Reset the filtered list
+            setState(() => _hideCategories = false);
+          },
+        )
             : null,
         fillColor: const Color(0xFFF4F4F5),
         filled: true,
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18),
             borderSide: BorderSide.none),

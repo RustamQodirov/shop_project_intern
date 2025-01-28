@@ -9,7 +9,7 @@ class StoreDataSource {
   Future<List<Store>> fetchStores(String token) async {
     try {
       final response = await dio.get(
-        'https://dev.api.sapp.imaninvest.com/v1/merchants/branches', // Replace with the actual endpoint
+        'https://dev.api.sapp.imaninvest.com/v1/merchants/branches?limit=1000', // Replace with the actual endpoint
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       if (response.statusCode == 200) {
