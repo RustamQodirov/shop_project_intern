@@ -8,29 +8,25 @@ class NearbySection extends StatelessWidget {
 
   const NearbySection({super.key, required this.nearbyStores});
 
-  // Function to get the distance between the user's current location and the store
   Future<double> _getDistance(double storeLatitude, double storeLongitude) async {
     try {
-      // Check if location permissions are granted
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        return 0.0; // Return 0 if location services are not enabled
+        return 0.0;
       }
 
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
-          return 0.0; // Return 0 if permission is denied
+          return 0.0;
         }
       }
 
-      // Get current position
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      // Calculate distance in meters
       double distanceInMeters = Geolocator.distanceBetween(
         position.latitude,
         position.longitude,
@@ -38,11 +34,10 @@ class NearbySection extends StatelessWidget {
         storeLongitude,
       );
 
-      // Convert to kilometers
       return distanceInMeters / 1000;
     } catch (e) {
       print("Error calculating distance: $e");
-      return 0.0; // Return 0 if there's an error in distance calculation
+      return 0.0;
     }
   }
 

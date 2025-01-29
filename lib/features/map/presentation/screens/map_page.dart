@@ -127,7 +127,7 @@ class _MapScreenState extends State<MapScreen> {
       onTap: (PlacemarkMapObject self, Point point) {
         final isSelected = placemarkToggles[self.mapId.value] ?? false;
         final newIconPath =
-            isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
+        isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
         updatePlacemarkIcon(self.mapId.value, newIconPath);
         placemarkToggles[self.mapId.value] = !isSelected;
         setState(() {
@@ -140,14 +140,14 @@ class _MapScreenState extends State<MapScreen> {
             selectedMarket = isSelected
                 ? null
                 : const ViewLocation(
-                    imgUrl: "assets/images/idea.png",
-                    title: "Idea",
-                    address: "Ташкент, Юнусабадский р-н, ул А. Темура, 43/2",
-                    appLatLong: AppLatLong(
-                        lat: 41.318118727817414, long: 69.29323833747138),
-                    distance: "1.5 km",
-                    timeToArrive: "10 min",
-                  );
+              imgUrl: "assets/images/idea.png",
+              title: "Idea",
+              address: "Ташкент, Юнусабадский р-н, ул А. Темура, 43/2",
+              appLatLong: AppLatLong(
+                  lat: 41.318118727817414, long: 69.29323833747138),
+              distance: "1.5 km",
+              timeToArrive: "10 min",
+            );
           }
         });
       },
@@ -157,7 +157,7 @@ class _MapScreenState extends State<MapScreen> {
       onTap: (PlacemarkMapObject self, Point point) {
         final isSelected = placemarkToggles[self.mapId.value] ?? false;
         final newIconPath =
-            isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
+        isSelected ? 'assets/images/off.png' : 'assets/images/on.png';
         updatePlacemarkIcon(self.mapId.value, newIconPath);
         placemarkToggles[self.mapId.value] = !isSelected;
         setState(() {
@@ -170,14 +170,14 @@ class _MapScreenState extends State<MapScreen> {
             selectedMarket = isSelected
                 ? null
                 : const ViewLocation(
-                    imgUrl: "assets/images/tex.png",
-                    title: "Texnomart",
-                    address: "Ташкент, Юнусабад 11",
-                    appLatLong: AppLatLong(
-                        lat: 41.318118727817414, long: 69.29323833747138),
-                    distance: "2.3 km",
-                    timeToArrive: "28 min",
-                  );
+              imgUrl: "assets/images/tex.png",
+              title: "Texnomart",
+              address: "Ташкент, Юнусабад 11",
+              appLatLong: AppLatLong(
+                  lat: 41.318118727817414, long: 69.29323833747138),
+              distance: "2.3 km",
+              timeToArrive: "28 min",
+            );
           }
         });
       },

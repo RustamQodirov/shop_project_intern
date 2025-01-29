@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../home/data/model/category_model.dart';
-import '../cubit/category_search_cubit.dart';
+import '../bloc/category_search_cubit/category_search_cubit.dart';
 
 class QuickSearch extends StatelessWidget {
   final List<Category> categories;

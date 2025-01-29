@@ -6,7 +6,8 @@ import '../../../home/data/datasources/category_datasource.dart';
 import '../../../home/data/model/category_model.dart';
 import '../../data/datasource/store_datasource.dart';
 import '../../data/model/store_model.dart';
-import '../cubit/category_search_cubit.dart';
+import '../bloc/category_search_cubit/category_search_cubit.dart';
+
 import '../widgets/quick_search.dart';
 import '../widgets/store_list.dart';
 
