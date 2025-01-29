@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/features/map/presentation/screens/map_page.dart';
 import '../../data/model/store_model.dart';
 
 class StoreList extends StatelessWidget {
@@ -43,5 +44,7 @@ class StoreList extends StatelessWidget {
 
   void _onStoreSelected(BuildContext context, Store store) {
     print('Store selected: ${store.name}');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MapScreen()));
   }
 }

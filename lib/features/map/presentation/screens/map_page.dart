@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shop/features/map/presentation/widgets/view_location.dart';
+import 'package:shop/features/search/data/model/store_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../domain/models/app_lat_long.dart';
 import '../../domain/service/app_location_service.dart';
@@ -11,7 +12,7 @@ import '../widgets/pos_tune_button.dart';
 import '../widgets/positioned_back_button.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({Key? key, }) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
