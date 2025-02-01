@@ -4,6 +4,8 @@ class Store {
   final String? logo;
   final String phoneNumber;
   final String address;
+  final double latitude;
+  final double longitude;
 
   Store({
     required this.guid,
@@ -11,6 +13,8 @@ class Store {
     this.logo,
     required this.phoneNumber,
     required this.address,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Store.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class Store {
       logo: json['logo'],
       phoneNumber: json['phone_number'],
       address: json['address']['address'],
+      latitude: (json['address']['latitude'] as num).toDouble(),
+      longitude: (json['address']['longitude'] as num).toDouble(),
     );
   }
 }

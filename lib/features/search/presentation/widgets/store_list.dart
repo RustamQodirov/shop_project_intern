@@ -21,8 +21,7 @@ class StoreList extends StatelessWidget {
         }
 
         return ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: storeIcon.isNotEmpty
@@ -45,6 +44,10 @@ class StoreList extends StatelessWidget {
   void _onStoreSelected(BuildContext context, Store store) {
     print('Store selected: ${store.name}');
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MapScreen()));
+      context,
+      MaterialPageRoute(
+        builder: (context) => MapScreen(),
+      ),
+    );
   }
 }

@@ -1,6 +1,5 @@
 import '../../../data/model/category_model.dart';
 
-
 abstract class CategoryState {}
 
 class CategoryInitial extends CategoryState {}
