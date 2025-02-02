@@ -6,7 +6,7 @@ class Branch {
   final String address;
   final double latitude;
   final double longitude;
-  final double distance;
+  late final double distance;
 
   Branch({
     required this.guid,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math'; // Import for sqrt and pow functions
 import 'package:flutter/material.dart';
 import 'package:shop/features/map/presentation/screens/temp/branch_data_source.dart';
 import 'package:shop/features/map/presentation/screens/temp/branch_model.dart';
@@ -21,6 +22,7 @@ class _MapScreenState extends State<MapScreen> {
   late BranchDataSource branchDataSource;
   List<Branch> branches = [];
   Branch? selectedBranch;
+  AppLatLong? userLocation;
 
   @override
   void initState() {
@@ -40,6 +42,16 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _loadBranches() async {
     try {
       branches = await branchDataSource.fetchBranches();
+      if (userLocation != null) {
+        for (var branch in branches) {
+          branch.distance = _calculateDistance(
+            userLocation!.lat,
+            userLocation!.long,
+            branch.latitude,
+            branch.longitude,
+          );
+        }
+      }
       _initializePlacemarks();
     } catch (e) {
       print('Failed to load branches: $e');
@@ -54,6 +66,9 @@ class _MapScreenState extends State<MapScreen> {
     } catch (_) {
       location = defaultLocation;
     }
+    setState(() {
+      userLocation = location;
+    });
     _moveToLocation(location);
     _addUserLocationPlacemark(location);
   }
@@ -121,6 +136,23 @@ class _MapScreenState extends State<MapScreen> {
       print('Overlay visibility set to true');
       print('Selected branch: ${selectedBranch?.name}');
     });
+  }
+
+  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const R = 6371; // Radius of the earth in km
+    final dLat = _deg2rad(lat2 - lat1);
+    final dLon = _deg2rad(lon2 - lon1);
+    final a =
+        sin(dLat / 2) * sin(dLat / 2) +
+            cos(_deg2rad(lat1)) * cos(_deg2rad(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final distance = R * c; // Distance in km
+    return distance;
+  }
+
+  double _deg2rad(double deg) {
+    return deg * (pi / 180);
   }
 
   @override
@@ -226,29 +258,16 @@ class _MapScreenState extends State<MapScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: displayedBranches.map((branch) {
-            return GestureDetector(
-              onTap: () {
-                if (mounted) {
-                  setState(() {
-                    isOverlayVisible = true;
-                    selectedBranch = branch;
-                    print('Overlay visibility set to true');
-                    print('Selected branch: ${selectedBranch?.name}');
-                  });
-                }
-              },
-              child: ViewLocation(
-                imgUrl: branch.logo.isNotEmpty
-                    ? branch.logo
-                    : 'assets/images/default.png',
-                title: branch.name,
-                address: branch.address,
-                appLatLong:
-                AppLatLong(lat: branch.latitude, long: branch.longitude),
-                distance: "${branch.distance} km",
-                timeToArrive: "10 min",
-                onDetailsPressed: () => _showBranchDetails(branch),
-              ),
+            return ViewLocation(
+              imgUrl: branch.logo.isNotEmpty
+                  ? branch.logo
+                  : 'assets/images/default.png',
+              title: branch.name,
+              address: branch.address,
+              appLatLong: AppLatLong(lat: branch.latitude, long: branch.longitude),
+              distance: "${branch.distance.toStringAsFixed(2)} km",
+              timeToArrive: "10 min",
+              onDetailsPressed: () => _showBranchDetails(branch),
             );
           }).toList(),
         ),
@@ -297,7 +316,7 @@ class ViewLocation extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 10),
       padding: const EdgeInsets.all(15),
       width: width - 50,
-      height: 149,
+      height: 155,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -328,56 +347,54 @@ class ViewLocation extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: width - 172,
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      width: width - 173,
-                      height: 38,
-                      child: Text(
-                        address,
-                        style: const TextStyle(
-                          overflow: TextOverflow.visible,
-                          fontSize: 13,
-                          color: Color(0xff74747b),
-                        ),
+                    const SizedBox(height: 6),
+                    Text(
+                      address,
+                      style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 13,
+                        color: Color(0xff74747b),
                       ),
+                      maxLines: 2,
                     ),
                   ],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 10),
           Row(
             children: [
               SmallContainer(
-                  text: distance, icon: Icons.location_on, onTap: () {}),
+                text: distance,
+                icon: Icons.location_on,
+                onTap: () {},
+              ),
               SmallContainer(
-                  text: timeToArrive,
-                  icon: Icons.directions_walk,
-                  onTap: () {}),
+                text: timeToArrive,
+                icon: Icons.directions_walk,
+                onTap: () {},
+              ),
               const Spacer(),
               GestureDetector(
                 onTap: onDetailsPressed,
                 child: Container(
                   margin: const EdgeInsets.only(top: 10),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                   decoration: BoxDecoration(
                     color: const Color(0xff4059E6),
                     borderRadius: BorderRadius.circular(10),
@@ -423,6 +440,7 @@ class SmallContainer extends StatelessWidget {
       child: Row(
         children: [
           Transform.scale(scaleY: 0.9, child: Icon(icon, color: Colors.black)),
+          const SizedBox(width: 4),
           Text(
             text,
             style: const TextStyle(
@@ -461,36 +479,35 @@ class BottomDetailsOverlay extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 68,
-                height: 68,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(branch.logo.isNotEmpty
-                        ? branch.logo
-                        : 'assets/images/default.png'),
-                    fit: BoxFit.cover,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(branch.logo.isNotEmpty
+                          ? branch.logo
+                          : 'assets/images/default.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
                         branch.name,
                         style: const TextStyle(
                           overflow: TextOverflow.ellipsis,
@@ -498,134 +515,127 @@ class BottomDetailsOverlay extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                      child: Text(
+                      const SizedBox(height: 6),
+                      Text(
                         branch.address,
                         style: const TextStyle(
-                          overflow: TextOverflow.visible,
+                          overflow: TextOverflow.ellipsis,
                           fontSize: 13,
                           color: Color(0xff74747b),
                         ),
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, right: 5),
+                  height: 50,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                    color: Color(0xfff4f4f5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.location_on_outlined,
+                    color: Color(0xff4059E6),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Divider(
+              color: const Color(0xff040415).withOpacity(0.1),
+              thickness: 1,
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xffF4F4F5),
+                    ),
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      branch.address,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff040405),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              Container(
-                margin: const EdgeInsets.only(top: 10, right: 5),
-                height: 50,
-                width: 50,
-                decoration: const BoxDecoration(
-                  color: Color(0xfff4f4f5),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.location_on_outlined,
-                  color: Color(0xff4059E6),
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xffF4F4F5),
+                    ),
+                    child: const Icon(
+                      Icons.phone,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      branch.phoneNumber,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff62c994),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Divider(
-            color: const Color(0xff040415).withOpacity(0.1),
-            thickness: 1,
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xffF4F4F5),
-                  ),
-                  child: const Icon(
-                    Icons.location_on,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 120,
-                  child: Text(
-                    branch.address,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xff040405),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xffF4F4F5),
+                    ),
+                    child: const Icon(
+                      Icons.access_time_filled_rounded,
+                      color: Colors.black,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xffF4F4F5),
-                  ),
-                  child: const Icon(
-                    Icons.phone,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 120,
-                  child: Text(
-                    branch.phoneNumber,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Color(0xff62c994),
+                  Expanded(
+                    child:  Text(
+                      "пн-пт 10:00-21:00, сб-вс 10:00-20:00",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff040405),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15.0),
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xffF4F4F5),
-                  ),
-                  child: const Icon(
-                    Icons.access_time_filled_rounded,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 120,
-                  child: const Text(
-                    "пн-пт 10:00-21:00, сб-вс 10:00-20:00",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xff040405),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

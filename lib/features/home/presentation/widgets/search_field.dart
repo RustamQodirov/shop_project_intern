@@ -11,7 +11,7 @@ class SearchField extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const SearchPage(category: '')),
+              builder: (context) => const SearchPage(category: '', token: '', hideCategories: false,)),
         );
       },
       readOnly: true,

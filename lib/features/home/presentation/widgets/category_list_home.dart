@@ -30,7 +30,7 @@ class CategoryList extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => SearchPage(
                           category: category.title,
-                          hideCategories: true,
+                          token: token, hideCategories: true,
                         ),
                       ),
                     );
