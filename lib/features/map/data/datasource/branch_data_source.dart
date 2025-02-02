@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'branch_model.dart';
+import '../models/branch_model.dart';
 
 class BranchDataSource {
   final Dio _dio = Dio();

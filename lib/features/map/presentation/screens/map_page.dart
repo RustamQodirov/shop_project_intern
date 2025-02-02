@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math'; // Import for sqrt and pow functions
 import 'package:flutter/material.dart';
-import 'package:shop/features/map/presentation/screens/temp/branch_data_source.dart';
-import 'package:shop/features/map/presentation/screens/temp/branch_model.dart';
+import 'package:shop/features/map/data/datasource/branch_data_source.dart';
+import 'package:shop/features/map/data/models/branch_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../domain/models/app_lat_long.dart';
 import '../../domain/service/app_location_service.dart';
@@ -382,12 +382,10 @@ class ViewLocation extends StatelessWidget {
               SmallContainer(
                 text: distance,
                 icon: Icons.location_on,
-                onTap: () {},
               ),
               SmallContainer(
                 text: timeToArrive,
                 icon: Icons.directions_walk,
-                onTap: () {},
               ),
               const Spacer(),
               GestureDetector(
@@ -421,12 +419,10 @@ class SmallContainer extends StatelessWidget {
     super.key,
     required this.text,
     required this.icon,
-    required this.onTap,
   });
 
   final String text;
   final IconData icon;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
