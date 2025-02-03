@@ -24,6 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   List<Branch> branches = [];
   Branch? selectedBranch;
   AppLatLong? userLocation;
+  String? selectedBranchId; // Track the currently selected branch ID
 
   @override
   void initState() {
@@ -99,38 +100,51 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _initializePlacemarks() {
-    for (var branch in branches) {
-      placemarks.add(
-        PlacemarkMapObject(
-          mapId: MapObjectId(branch.guid),
-          point: Point(latitude: branch.latitude, longitude: branch.longitude),
-          icon: PlacemarkIcon.single(
-            PlacemarkIconStyle(
-              image: BitmapDescriptor.fromAssetImage('assets/images/on.png'),
-              scale: 0.7,
+    setState(() {
+      placemarks.clear();
+      for (var branch in branches) {
+        placemarks.add(
+          PlacemarkMapObject(
+            mapId: MapObjectId(branch.guid),
+            point: Point(latitude: branch.latitude, longitude: branch.longitude),
+            icon: PlacemarkIcon.single(
+              PlacemarkIconStyle(
+                image: BitmapDescriptor.fromAssetImage(
+                    selectedBranchId == branch.guid
+                        ? 'assets/images/on.png'
+                        : 'assets/images/off.png'),
+                scale: 0.7,
+              ),
             ),
+            onTap: (PlacemarkMapObject self, Point point) {
+              setState(() {
+                if (selectedBranchId == self.mapId.value) {
+                  // Toggle off
+                  selectedBranchId = null;
+                  selectedBranch = null;
+                  isOverlayVisible = false;
+                } else {
+                  // Toggle on
+                  selectedBranchId = self.mapId.value;
+                  selectedBranch = branches.firstWhere((branch) => branch.guid == self.mapId.value);
+                  isOverlayVisible = true;
+                }
+              });
+              _initializePlacemarks(); // Reinitialize placemarks to update icon
+            },
+            opacity: 0.8,
           ),
-          onTap: (PlacemarkMapObject self, Point point) {
-            setState(() {
-              isOverlayVisible = !isOverlayVisible;
-              selectedBranch = branches
-                  .firstWhere((branch) => branch.guid == self.mapId.value);
-              print('Overlay visibility toggled: $isOverlayVisible');
-              print('Selected branch: ${selectedBranch?.name}');
-            });
-          },
-          opacity: 0.8,
-        ),
-      );
-    }
+        );
+      }
+    });
   }
 
   void _showBranchDetails(Branch branch) {
     setState(() {
-      isOverlayVisible = true;
+      selectedBranchId = branch.guid;
       selectedBranch = branch;
-      print('Overlay visibility set to true');
-      print('Selected branch: ${selectedBranch?.name}');
+      isOverlayVisible = true;
+      _initializePlacemarks(); // Reinitialize placemarks to update icon
     });
   }
 
@@ -177,6 +191,8 @@ class _MapScreenState extends State<MapScreen> {
             setState(() {
               isOverlayVisible = false;
               selectedBranch = null;
+              selectedBranchId = null;
+              _initializePlacemarks(); // Reinitialize placemarks to update icon
             });
           },
           child: Stack(
