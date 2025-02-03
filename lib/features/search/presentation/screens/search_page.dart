@@ -144,7 +144,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
       );
     }
-    return StoreList(stores: filteredStores); // Assuming you have a custom widget for displaying the stores
+    return StoreList(stores: filteredStores);
   }
 
   Widget _buildSearchBar() {

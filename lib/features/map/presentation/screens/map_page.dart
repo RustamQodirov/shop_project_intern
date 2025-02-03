@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:math'; // Import for sqrt and pow functions
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shop/features/map/data/datasource/branch_data_source.dart';
 import 'package:shop/features/map/data/models/branch_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -44,12 +45,7 @@ class _MapScreenState extends State<MapScreen> {
       branches = await branchDataSource.fetchBranches();
       if (userLocation != null) {
         for (var branch in branches) {
-          branch.distance = _calculateDistance(
-            userLocation!.lat,
-            userLocation!.long,
-            branch.latitude,
-            branch.longitude,
-          );
+          branch.distance = await _getDistance(branch.latitude, branch.longitude);
         }
       }
       _initializePlacemarks();
@@ -138,21 +134,37 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const R = 6371; // Radius of the earth in km
-    final dLat = _deg2rad(lat2 - lat1);
-    final dLon = _deg2rad(lon2 - lon1);
-    final a =
-        sin(dLat / 2) * sin(dLat / 2) +
-            cos(_deg2rad(lat1)) * cos(_deg2rad(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2);
-    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    final distance = R * c; // Distance in km
-    return distance;
-  }
+  Future<double> _getDistance(double storeLatitude, double storeLongitude) async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return 0.0;
+      }
 
-  double _deg2rad(double deg) {
-    return deg * (pi / 180);
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+          return 0.0;
+        }
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      double distanceInMeters = Geolocator.distanceBetween(
+        position.latitude,
+        position.longitude,
+        storeLatitude,
+        storeLongitude,
+      );
+
+      return distanceInMeters / 1000;
+    } catch (e) {
+      print("Error calculating distance: $e");
+      return 0.0;
+    }
   }
 
   @override
@@ -619,9 +631,9 @@ class BottomDetailsOverlay extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child:  Text(
+                    child: Text(
                       "пн-пт 10:00-21:00, сб-вс 10:00-20:00",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xff040405),
                       ),

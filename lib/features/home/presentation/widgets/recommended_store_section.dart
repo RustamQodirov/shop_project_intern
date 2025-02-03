@@ -85,7 +85,7 @@ class RecommendedStoreItem extends StatelessWidget {
         ),
         child: Image.network(
           imageUrl,
-          fit: BoxFit.contain, // Changed from BoxFit.cover to BoxFit.contain
+          fit: BoxFit.contain,
           width: 200,
           height: 200,
           errorBuilder: (context, error, stackTrace) {
