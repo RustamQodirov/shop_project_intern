@@ -3,7 +3,7 @@ import '../models/branch_model.dart';
 
 class BranchDataSource {
   final Dio _dio = Dio();
-  final String _baseUrl = 'https://dev.api.sapp.imaninvest.com/v1/merchants/branches';
+  final String _baseUrl = 'https://dev.api.sapp.imaninvest.com/v1/merchants/branches?limit=1000';
   final String _token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4OTc0Njg4ODgsImlkIjoiYmFjYWZlZTUtYWI4MC00NjBmLWIwODgtNjFhNDJmZmZjMGFlIiwidXNlcl9pZCI6IjU5NzA1ODdkLTEzNDMtNDM4ZC04NjI4LTZlZWViYjAzYmU2OSJ9.Mjc1j9lu12lc2eNddzeKi7z8GB1zu95uXi5gSOC0mKs';
 
   Future<List<Branch>> fetchBranches() async {

@@ -19,7 +19,10 @@ class Header extends StatelessWidget {
         ),
         const Spacer(),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>MapScreen()));
+          },
+
           icon: SvgPicture.asset(
             'assets/icons/icon.svg',
             width: 22,
