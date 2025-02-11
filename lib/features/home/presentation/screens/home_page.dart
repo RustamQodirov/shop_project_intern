@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:shop/features/home/presentation/bloc/nearby_cubit/nearby_cubit.dart';
 import '../../data/datasources/banner_datasource.dart';
 import '../../data/datasources/category_datasource.dart';
 import '../../data/datasources/nearby_datasource.dart';
@@ -11,11 +12,9 @@ import '../../domain/repositories/nearby_repository_impl.dart';
 import '../../domain/repositories/recommended_store_repository_impl.dart';
 import '../bloc/banner_cubit/banner_cubit.dart';
 import '../bloc/category_cubit/category_cubit.dart';
-import '../bloc/nearby_cubit/nearby_cubit.dart';
 import '../bloc/nearby_cubit/nearby_state.dart';
 import '../bloc/recommended_cubit/recommended_store_cubit.dart';
 import '../bloc/recommended_cubit/recommended_store_state.dart';
-
 import '../widgets/caruosel_manager.dart';
 import '../widgets/category_list_home.dart';
 import '../widgets/home_carousel.dart';

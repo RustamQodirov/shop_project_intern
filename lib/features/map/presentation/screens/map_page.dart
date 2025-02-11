@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shop/features/map/data/datasource/branch_data_source.dart';
@@ -130,7 +129,7 @@ class _MapScreenState extends State<MapScreen> {
                     .firstWhere((branch) => branch.guid == self.mapId.value);
                 isOverlayVisible = branchSelectedMap[self.mapId.value] ?? false;
               });
-              _initializePlacemarks(); // Reinitialize placemarks to update icon
+              _initializePlacemarks();
             },
             opacity: 0.8,
           ),
@@ -144,7 +143,7 @@ class _MapScreenState extends State<MapScreen> {
       branchSelectedMap[branch.guid] = true;
       selectedBranch = branch;
       isOverlayVisible = true;
-      _initializePlacemarks(); // Reinitialize placemarks to update icon
+      _initializePlacemarks();
     });
   }
 
@@ -194,7 +193,7 @@ class _MapScreenState extends State<MapScreen> {
               isOverlayVisible = false;
               selectedBranch = null;
               branchSelectedMap.clear();
-              _initializePlacemarks(); // Reinitialize placemarks to update icon
+              _initializePlacemarks();
             });
           },
           child: Stack(

@@ -7,11 +7,10 @@ import 'package:shop/features/search/presentation/widgets/store_list.dart';
 
 import '../../../home/data/datasources/category_datasource.dart';
 import '../../../home/data/model/category_model.dart';
-import '../../data/datasource/store_datasource.dart';
 import '../../data/model/store_model.dart';
 import '../bloc/category_search_cubit/category_search_cubit.dart';
-import '../widgets/quick_search.dart'; // Assuming Dio is being used for API calls
-// Assuming data source for fetching stores
+import '../widgets/quick_search.dart';
+
 
 class SearchPage extends StatefulWidget {
   final String category;
@@ -71,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
       final dio = Dio();
       final storeDataSource = StoreDataSource(dio: dio);
       stores = await storeDataSource.fetchStores(widget.token);
-      filteredStores = List.from(stores); // Initialize filteredStores with all stores
+      filteredStores = List.from(stores);
       setState(() {});
     } catch (e) {
       print("Error fetching stores: $e");
@@ -88,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
           return name.contains(query) || address.contains(query);
         }).toList();
       } else {
-        filteredStores = List.from(stores); // Reset to original list when search is empty
+        filteredStores = List.from(stores);
       }
     });
   }
