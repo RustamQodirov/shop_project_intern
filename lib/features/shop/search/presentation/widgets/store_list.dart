@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop/features/map/presentation/screens/map_page.dart';
+import 'package:shop/features/shop/map/presentation/screens/map_page.dart';
 import '../../data/model/store_model.dart';
 
 class StoreList extends StatelessWidget {

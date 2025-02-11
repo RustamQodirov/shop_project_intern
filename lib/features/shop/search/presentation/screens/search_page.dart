@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dio/dio.dart';
-import 'package:shop/features/search/data/datasource/store_datasource.dart';
-import 'package:shop/features/search/presentation/widgets/store_list.dart';
+import 'package:shop/features/shop/search/presentation/widgets/store_list.dart';
 
 import '../../../home/data/datasources/category_datasource.dart';
 import '../../../home/data/model/category_model.dart';
+import '../../data/datasource/store_datasource.dart';
 import '../../data/model/store_model.dart';
 import '../bloc/category_search_cubit/category_search_cubit.dart';
 import '../widgets/quick_search.dart';
-
 
 class SearchPage extends StatefulWidget {
   final String category;
@@ -70,7 +69,8 @@ class _SearchPageState extends State<SearchPage> {
       final dio = Dio();
       final storeDataSource = StoreDataSource(dio: dio);
       stores = await storeDataSource.fetchStores(widget.token);
-      filteredStores = List.from(stores);
+      filteredStores =
+          List.from(stores);
       setState(() {});
     } catch (e) {
       print("Error fetching stores: $e");
@@ -87,7 +87,8 @@ class _SearchPageState extends State<SearchPage> {
           return name.contains(query) || address.contains(query);
         }).toList();
       } else {
-        filteredStores = List.from(stores);
+        filteredStores =
+            List.from(stores); // Reset to original list when search is empty
       }
     });
   }
@@ -125,7 +126,7 @@ class _SearchPageState extends State<SearchPage> {
     return BlocBuilder<CategorySearchCubit, CategorySearchState>(
       builder: (context, state) {
         final categoryTitle =
-        state is CategorySelected ? state.category : widget.category;
+            state is CategorySelected ? state.category : widget.category;
         return Text(
           categoryTitle.isEmpty ? 'Часто ищут' : categoryTitle,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -181,19 +182,19 @@ class _SearchPageState extends State<SearchPage> {
         ),
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
-          icon: SvgPicture.asset('assets/icons/minus.svg',
-              width: 16, height: 16, color: Colors.grey),
-          onPressed: () {
-            _searchController.clear();
-            _filterStores();
-            setState(() => _hideCategories = false);
-          },
-        )
+                icon: SvgPicture.asset('assets/icons/minus.svg',
+                    width: 16, height: 16, color: Colors.grey),
+                onPressed: () {
+                  _searchController.clear();
+                  _filterStores();
+                  setState(() => _hideCategories = false);
+                },
+              )
             : null,
         fillColor: const Color(0xFFF4F4F5),
         filled: true,
         contentPadding:
-        const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(18),
             borderSide: BorderSide.none),

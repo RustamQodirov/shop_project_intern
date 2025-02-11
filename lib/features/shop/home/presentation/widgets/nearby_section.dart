@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shop/features/home/data/model/nearby_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shop/features/shop/home/data/model/nearby_model.dart';
 
 class NearbySection extends StatelessWidget {
   final List<NearbyStore> nearbyStores;

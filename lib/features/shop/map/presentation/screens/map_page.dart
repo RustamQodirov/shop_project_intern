@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shop/features/map/data/datasource/branch_data_source.dart';
-import 'package:shop/features/map/data/models/branch_model.dart';
+import 'package:shop/features/shop/map/data/datasource/branch_data_source.dart';
+import 'package:shop/features/shop/map/data/models/branch_model.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../domain/models/app_lat_long.dart';
 import '../../domain/service/app_location_service.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:shop/features/home/presentation/bloc/nearby_cubit/nearby_cubit.dart';
+import 'package:shop/features/shop/home/presentation/bloc/nearby_cubit/nearby_cubit.dart';
 import '../../data/datasources/banner_datasource.dart';
 import '../../data/datasources/category_datasource.dart';
 import '../../data/datasources/nearby_datasource.dart';
