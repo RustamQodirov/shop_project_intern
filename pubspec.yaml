@@ -18,6 +18,7 @@ dependencies:
   geolocator: ^9.0.2
   flutter_bloc: ^9.0.0
   dio: ^5.7.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +30,7 @@ flutter:
 
   assets:
     - assets/icons/  # Ensure you have your SVG or image assets in this folder
+    - assets/icons/1.svg  # Ensure you have your SVG or image assets in this folder
     - assets/images/  # Ensure you have your SVG or image assets in this folder
    # Ensure you have your SVG or image assets in this folder
 
@@ -37,6 +39,10 @@ flutter:
     - family: Gilroy
       fonts:
         - asset: assets/fonts/Gilroy-Regular.ttf
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/manrope/Manrope-Bold.ttf
+
 
   #       - asset: fonts/CustomFont-Bold.ttf
   #         weight: 700
