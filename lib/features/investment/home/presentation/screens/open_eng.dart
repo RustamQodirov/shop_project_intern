@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shop/features/investment/home/presentation/screens/fill_the_amount.dart';
+import 'package:shop/features/investment/home/presentation/widgets/open_deposit_bottom_sheet.dart';
 
 class DepositScreen extends StatelessWidget {
   const DepositScreen({super.key});
@@ -43,9 +45,11 @@ class DepositScreen extends StatelessWidget {
                     ),
                   ),
                   // Actual SVG Logo
-                  SvgPicture.asset(
-                    'assets/images/logo_open.svg',
-                    height: 110,
+                  Image.asset(
+                    'assets/images/logo_open_deposit.png',
+                    width: 130, // Increased from 97.5
+                    height: 130, // Increased from 97.5
+                    fit: BoxFit.contain,
                   ),
                 ],
               ),
@@ -70,7 +74,7 @@ class DepositScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 46),
               // Info Box
               Container(
                 padding: const EdgeInsets.all(12),
@@ -96,10 +100,16 @@ class DepositScreen extends StatelessWidget {
                       },
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.lightbulb_outline,
-                            color: Color(0xFF828DA1),
-                            size: 18,
+                          GestureDetector(
+                            onTap: () {
+                              OpenDepositBottomSheet.openDepositBottomSheet(
+                                  context);
+                            },
+                            child: const Icon(
+                              Icons.lightbulb_outline,
+                              color: Color(0xFF828DA1),
+                              size: 18,
+                            ),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -116,12 +126,16 @@ class DepositScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 97),
+              const SizedBox(height: 97.5),
               // Buttons
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FillTheAmount()));
                     // Handle deposit action
                   },
                   style: ElevatedButton.styleFrom(
@@ -145,12 +159,14 @@ class DepositScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle deposit action
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    surfaceTintColor: Colors.transparent,
+                    splashFactory: NoSplash.splashFactory,
                     padding: const EdgeInsets.symmetric(vertical: 17.5),
-                    backgroundColor: Colors.white70,
+                    backgroundColor: const Color(0xff4059E6).withOpacity(0.14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
