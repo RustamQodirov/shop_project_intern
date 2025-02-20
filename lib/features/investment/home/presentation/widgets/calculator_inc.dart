@@ -120,7 +120,7 @@ class _ProfitCalculatorContentState extends State<ProfitCalculatorContent> {
               shape: BoxShape.circle,
               color: Colors.white,
               border: Border.all(
-                color: const Color(0xFFD0D5DD), // Lighter grey border
+                color: const Color(0xFFD0D5DD).withOpacity(0.1), // Lighter grey border
                 width: 2, // Border thickness
               ),
             ),
