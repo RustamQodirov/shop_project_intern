@@ -30,10 +30,10 @@ flutter:
   uses-material-design: true  # This ensures the Material Icons font is included
 
   assets:
-    - assets/icons/  # Ensure you have your SVG or image assets in this folder
-    - assets/icons/1.svg  # Ensure you have your SVG or image assets in this folder
-    - assets/images/  # Ensure you have your SVG or image assets in this folder
-   # Ensure you have your SVG or image assets in this folder
+    - assets/icons/
+    - assets/icons/1.svg
+    - assets/images/
+
 
   # Optional: Add custom fonts if required
   fonts:
