@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:shop/features/investment/home/presentation/widgets/cards_list_bottomsheet.dart';
 
 class FillTheAmount extends StatefulWidget {
   const FillTheAmount({super.key});
@@ -47,7 +48,13 @@ class _FillTheAmountState extends State<FillTheAmount> {
             children: [
               const _AppBar(),
               const SizedBox(height: 20),
-              const _SelectionTile(title: 'Откуда', value: 'Humo •• 8929'),
+              _SelectionTile(
+                title: 'Откуда',
+                value: 'Humo •• 8929',
+                onTap: () {
+                  CardsListBottomSheet.cardsBottomSheet(context);
+                },
+              ),
               const SizedBox(height: 10),
               const _SelectionTile(
                 title: 'Куда',
@@ -56,7 +63,8 @@ class _FillTheAmountState extends State<FillTheAmount> {
                 showArrow: false,
               ),
               const SizedBox(height: 20),
-              _AmountInput(controller: _controller, formatNumber: _formatNumber),
+              _AmountInput(
+                  controller: _controller, formatNumber: _formatNumber),
               const SizedBox(height: 8),
               Center(
                 child: Text(
@@ -128,64 +136,71 @@ class _SelectionTile extends StatelessWidget {
   final String value;
   final String? trailing;
   final bool showArrow;
+  final VoidCallback? onTap;
 
   const _SelectionTile({
     required this.title,
     required this.value,
     this.trailing,
     this.showArrow = true,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF828DA1).withOpacity(0.1)),
-        color: const Color(0xFF828DA1).withOpacity(0.06),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.manrope(
-                  fontSize: 14,
-                  color: const Color(0xFF828DA1),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: GoogleFonts.manrope(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              if (trailing != null)
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        height: 70,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFF828DA1).withOpacity(0.1)),
+          color: const Color(0xFF828DA1).withOpacity(0.06),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  trailing!,
-                  style: GoogleFonts.manrope(fontSize: 14, color: const Color(0xFF828DA1)),
+                  title,
+                  style: GoogleFonts.manrope(
+                    fontSize: 14,
+                    color: const Color(0xFF828DA1),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              if (showArrow) ...[
-                const SizedBox(width: 10),
-                Icon(Icons.arrow_forward_ios, color: Colors.black),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: GoogleFonts.manrope(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
               ],
-            ],
-          ),
-        ],
+            ),
+            Row(
+              children: [
+                if (trailing != null)
+                  Text(
+                    trailing!,
+                    style: GoogleFonts.manrope(
+                        fontSize: 14, color: const Color(0xFF828DA1)),
+                  ),
+                if (showArrow) ...[
+                  const SizedBox(width: 10),
+                  const Icon(Icons.arrow_forward_ios, color: Colors.black),
+                ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -242,7 +257,7 @@ class _AmountInput extends StatelessWidget {
               onChanged: (value) {
                 String formatted = formatNumber(value);
                 controller.value = TextEditingValue(
-                  text: formatted.replaceAll(' ', ''), // Store raw digits
+                  text: formatted.replaceAll(' ', ''),
                   selection: TextSelection.collapsed(offset: formatted.length),
                 );
               },
