@@ -16,11 +16,18 @@ class InvestHomePage extends StatefulWidget {
 
 class _InvestHomePageState extends State<InvestHomePage> {
   int _selectedIndex = 0;
+  bool _isBalanceVisible = true;
 
   @override
   void initState() {
     super.initState();
     context.read<InvestmentCubit>().fetchInvestments();
+  }
+
+  void _toggleBalanceVisibility() {
+    setState(() {
+      _isBalanceVisible = !_isBalanceVisible;
+    });
   }
 
   @override
@@ -75,17 +82,24 @@ class _InvestHomePageState extends State<InvestHomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('0',
-                                style: GoogleFonts.manrope(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                            const SizedBox(width: 8),
-                            Text('сум',
-                                style: GoogleFonts.manrope(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white.withOpacity(0.5))),
+                            IconButton(
+                              icon: Image.asset(
+                                _isBalanceVisible
+                                    ? 'assets/icons/off.png'
+                                    : 'assets/icons/on.png',
+                                height: 30,
+                                width: 30,
+                                color: Colors.white,
+                              ),
+                              onPressed: _toggleBalanceVisibility,
+                            ),
+                            Text(
+                              _isBalanceVisible ? '0 сум' : 'Показать баланс',
+                              style: GoogleFonts.manrope(
+                                  fontSize: 29,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 5),
@@ -96,9 +110,11 @@ class _InvestHomePageState extends State<InvestHomePage> {
                             color: const Color(0xFF4059E6).withOpacity(0.5),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text('Нет вложений, чтобы начислять прибыль',
-                              style: GoogleFonts.manrope(
-                                  fontSize: 16, color: Colors.white)),
+                          child: Text(
+                            'Нет вложений, чтобы начислять прибыль',
+                            style: GoogleFonts.manrope(
+                                fontSize: 16, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -192,7 +208,7 @@ class InvestmentCard extends StatelessWidget {
               onPressed: (context) {
                 // Add your top-up action here
               },
-              backgroundColor: const Color(0xFF4059E6).withOpacity(0.2),
+              backgroundColor: const Color(0xFF4059E6).withOpacity(0.07),
               // Solid blue color
               foregroundColor: Color(0xFF4059E6),
               // White text/icon
@@ -316,4 +332,3 @@ class InvestmentCard extends StatelessWidget {
     );
   }
 }
-// D
